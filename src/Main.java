@@ -14,7 +14,7 @@ public class Main {
         return dictionary;
     }
 
-    public static String readFile(String _filename){
+    public static String readTextFile(String _filename){
         StringBuilder result = new StringBuilder();
         File filename = new File(_filename);
         try (BufferedReader in = new BufferedReader(new FileReader(filename))){
@@ -29,6 +29,36 @@ public class Main {
         return result.toString();
     }
 
+    public static void decodeCompressedFile(String _filename, String _outputFilename){
+        String encoded = "";
+        HashMap<String, Character> hm = new HashMap<String, Character>();
+        File filename = new File(_filename);
+        try (BufferedReader in = new BufferedReader(new FileReader(filename))){
+            String line = in.readLine();
+            int flag = 0;
+            while (line != null){
+                if (line.equals("")) {
+                    flag += 1;
+                }
+                if (flag == 1) {
+                    String[] tmp = line.split(": ");
+                    if (tmp.length == 2) {
+                        hm.put(tmp[1], tmp[0].charAt(0));
+                    }
+                } else if (flag == 2) {
+                    encoded = line;
+                }
+                line = in.readLine();
+            }
+            String response = Huffman.decode(hm, encoded);
+            System.out.println(response);
+            writeFile(_outputFilename, response);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
     public static void writeFile(String _filename, String _encoded){
         try (FileWriter myWriter = new FileWriter(_filename)) {
             myWriter.write(_encoded);
@@ -37,10 +67,10 @@ public class Main {
         }
     }
 
-    public static String getResultText(Huffman huffman, Boolean isEncode) {
+    public static String getResultText(Huffman huffman) {
         StringBuilder dictionary = getDictionary(huffman.hashMapCharCode);
-        String response = isEncode ? huffman.encode() : Huffman.decode(null, "");
-        return "Size: " + huffman.hashMapCharCode.size() + "\n\n" + "Dictionary:" + "\n" + dictionary.toString() + "\n" + "Result:" + "\n" + response;
+        String response = huffman.encode();
+        return "Size " + huffman.hashMapCharCode.size() + "\n\n" + dictionary.toString() + "\n" + response;
     }
 
 
@@ -50,10 +80,13 @@ public class Main {
             String inputFile = args[1];
             String outputFile = args[2];
 
-            String inputText = readFile(inputFile);
-            Huffman huffman = new Huffman(inputText);
-
-            writeFile(outputFile, getResultText(huffman, type.equals("--encode")));
+            if (type.equals("--encode")) {
+                String inputText = readTextFile(inputFile);
+                Huffman huffman = new Huffman(inputText);
+                writeFile(outputFile, getResultText(huffman));
+            } else {
+                decodeCompressedFile(inputFile, outputFile);
+            }
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
