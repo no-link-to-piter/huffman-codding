@@ -30,7 +30,7 @@ public class Huffman {
         });
 
         this.handleFrequencies();
-        this.createDefaultHuffmanTree();
+        this.fillPriorityQueue();
         this.createHuffmanTree();
         this.buildCodeRecursion(this.root, "");
     }
@@ -64,7 +64,7 @@ public class Huffman {
         }
     }
 
-    private void createDefaultHuffmanTree(){
+    private void fillPriorityQueue(){
         for (Map.Entry<Character, Integer> entry : this.hashMapCharFrequency.entrySet()){
             Character ch = entry.getKey();
             Integer frequency = entry.getValue();
