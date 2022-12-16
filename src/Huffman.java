@@ -96,14 +96,15 @@ public class Huffman {
         return stringBuilder.toString();
     }
 
-    public String decode(){
+    public static String decode(HashMap<String, Character> _hashMapCodeChar, String _encodedString){
         StringBuilder stringBuilder = new StringBuilder();
         StringBuilder tmp = new StringBuilder();
-        char[] chars = this.encodedString.toCharArray();
+        char[] chars = _encodedString.toCharArray();
+        HashMap<String, Character> _hash = _hashMapCodeChar;
         for(char ch : chars){
             tmp.append(ch);
-            if (this.hashMapCodeChar.containsKey(tmp.toString())) {
-                stringBuilder.append(this.hashMapCodeChar.get(tmp.toString()));
+            if (_hash.containsKey(tmp.toString())) {
+                stringBuilder.append(_hash.get(tmp.toString()));
                 tmp.setLength(0);
             }
         }

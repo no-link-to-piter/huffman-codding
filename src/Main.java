@@ -39,7 +39,7 @@ public class Main {
 
     public static String getResultText(Huffman huffman, Boolean isEncode) {
         StringBuilder dictionary = getDictionary(huffman.hashMapCharCode);
-        String response = isEncode ? huffman.encode() : huffman.decode();
+        String response = isEncode ? huffman.encode() : Huffman.decode(null, "");
         return "Size: " + huffman.hashMapCharCode.size() + "\n\n" + "Dictionary:" + "\n" + dictionary.toString() + "\n" + "Result:" + "\n" + response;
     }
 
