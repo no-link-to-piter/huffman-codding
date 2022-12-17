@@ -89,11 +89,22 @@ public class Huffman {
         return stringBuilder.toString();
     }
 
+    public static String createWithZero(String _str) {
+        String result = _str;
+        for (int i = 0; i < 8 - _str.length(); i++) {
+            result = "0" + result;
+        }
+        return result;
+    }
+
     public static String decode(HashMap<String, Character> _hash, String _encodedString){
         StringBuilder stringBuilder = new StringBuilder();
         StringBuilder tmp = new StringBuilder();
-        char[] chars = _encodedString.toCharArray();
-        for(char ch : chars){
+        String dec = "";
+        for (char ch : _encodedString.toCharArray()) {
+            dec += createWithZero(Integer.toBinaryString((int)ch));
+        }
+        for(char ch : dec.toCharArray()){
             tmp.append(ch);
             if (_hash.containsKey(tmp.toString())) {
                 stringBuilder.append(_hash.get(tmp.toString()));
