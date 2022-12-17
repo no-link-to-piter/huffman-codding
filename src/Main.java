@@ -67,10 +67,32 @@ public class Main {
         }
     }
 
+    public static String createWithZero(String _str) {
+        String result = _str;
+        for (int i = 0; i < 8 - _str.length(); i++) {
+            result = "0" + result;
+        }
+        return result;
+    }
+
     public static String getResultText(Huffman huffman) {
         StringBuilder dictionary = getDictionary(huffman.hashMapCharCode);
         String response = huffman.encode();
-        return "Size " + huffman.hashMapCharCode.size() + "\n\n" + dictionary.toString() + "\n" + response;
+        System.out.println(response);
+        String str = "";
+        for (int i = 0; i <= response.length()/8; i++) {
+            int n = i == response.length()/8 ? response.length() : (i+1)*8;
+            int a = Integer.parseInt(response.substring(8*i,n),2);
+            str += (char)(a);
+        }
+        String dec = "";
+        for (char ch : str.toCharArray()) {
+            int n = (int)ch;
+            String tmp = Integer.toBinaryString(n);
+            dec += createWithZero(tmp);
+        }
+        System.out.println(Huffman.decode(huffman.hashMap, dec));
+        return str;
     }
 
 

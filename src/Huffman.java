@@ -7,6 +7,7 @@ public class Huffman {
     private final String inputString;
     public HashMap<Character, Integer> hashMapCharFrequency;
     public HashMap<Character, String> hashMapCharCode;
+    public HashMap<String, Character> hashMap;
     private final PriorityQueue<Node> priorityQueue;
     private Node root;
 
@@ -14,6 +15,7 @@ public class Huffman {
         this.inputString = inputString;
         this.hashMapCharFrequency = new HashMap<Character, Integer>();
         this.hashMapCharCode = new HashMap<Character, String>();
+        this.hashMap = new HashMap<String, Character>();
         this.priorityQueue = new PriorityQueue<Node>(1, new Comparator<Node>() {
             @Override
             public int compare(Node n1, Node n2) {
@@ -41,6 +43,7 @@ public class Huffman {
                 this.createCodes(rightNode, code + '1');
             } else {
                 this.hashMapCharCode.put(node.getCh(), code);
+                this.hashMap.put(code, node.getCh());
             }
         }
     }
@@ -51,7 +54,6 @@ public class Huffman {
             Node rightNode = this.priorityQueue.peek() != null ? this.priorityQueue.poll() : null;
             int rightNodeFrequency = rightNode != null ? rightNode.getFrequency() : 0;
             this.root = new Node('\0', leftNode.getFrequency() + rightNodeFrequency, leftNode, rightNode);
-
             if (this.priorityQueue.peek() != null){
                 this.priorityQueue.offer(this.root);
             } else {
