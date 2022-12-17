@@ -5,10 +5,8 @@ import java.util.Comparator;
 
 public class Huffman {
     private final String inputString;
-    private String encodedString;
     public HashMap<Character, Integer> hashMapCharFrequency;
     public HashMap<Character, String> hashMapCharCode;
-    public HashMap<String, Character> hashMapCodeChar;
     private final PriorityQueue<Node> priorityQueue;
     private Node root;
 
@@ -16,7 +14,6 @@ public class Huffman {
         this.inputString = inputString;
         this.hashMapCharFrequency = new HashMap<Character, Integer>();
         this.hashMapCharCode = new HashMap<Character, String>();
-        this.hashMapCodeChar = new HashMap<String, Character>();
         this.priorityQueue = new PriorityQueue<Node>(1, new Comparator<Node>() {
             @Override
             public int compare(Node n1, Node n2) {
@@ -32,19 +29,18 @@ public class Huffman {
         this.handleFrequencies();
         this.fillPriorityQueue();
         this.createHuffmanTree();
-        this.buildCodeRecursion(this.root, "");
+        this.createCodes(this.root, "");
     }
 
-    private void buildCodeRecursion(Node node, String code){
+    private void createCodes(Node node, String code){
         if (node != null){
             Node leftNode = node.getLeft();
             Node rightNode = node.getRight();
             if (leftNode != null || rightNode != null) {
-                this.buildCodeRecursion(leftNode, code + '0');
-                this.buildCodeRecursion(rightNode, code + '1');
+                this.createCodes(leftNode, code + '0');
+                this.createCodes(rightNode, code + '1');
             } else {
                 this.hashMapCharCode.put(node.getCh(), code);
-                this.hashMapCodeChar.put(code, node.getCh());
             }
         }
     }
@@ -76,12 +72,8 @@ public class Huffman {
     private void handleFrequencies() {
         int frequency;
         char[] chars = this.inputString.toCharArray();
-        for(char ch : chars){
-            if (!this.hashMapCharFrequency.containsKey(ch)) {
-                frequency = 1;
-            } else {
-                frequency = this.hashMapCharFrequency.get(ch) + 1;
-            }
+        for(char ch : chars) {
+            frequency = !this.hashMapCharFrequency.containsKey(ch) ? 1 : this.hashMapCharFrequency.get(ch) + 1;
             this.hashMapCharFrequency.put(ch, frequency);
         }
     }
@@ -92,7 +84,6 @@ public class Huffman {
         for(char ch : chars){
             stringBuilder.append(this.hashMapCharCode.get(ch));
         }
-        this.encodedString = stringBuilder.toString();
         return stringBuilder.toString();
     }
 
